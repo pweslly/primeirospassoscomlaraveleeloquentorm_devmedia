@@ -1,0 +1,55 @@
+version: "3.1"
+services:
+  www:
+    container_name: www_php
+    hostname: www_php
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8090:80
+    volumes:
+      - ./imoveis/public:/var/www/html
+      - ./imoveis/:/var/www/
+    environment:
+      - APP_NAME=Laravel
+      - APP_ENV=localhost
+      - APP_KEY=base64:fmNoqRZpaNiCqHmwQJc87uvG48cyvvY5P3LCNc6Pa1A=
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql_db
+      - DB_PORT=3306
+      - DB_DATABASE=imoveis
+      - DB_USERNAME=root
+      - DB_PASSWORD=phpcurso
+    restart: always  
+    networks:
+      - www_phpmysql_network
+  mysql_db:
+    container_name: mysql57_container
+    tty: true
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=phpcurso  
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    restart: always  
+    networks:
+      - www_phpmysql_network
+  phpmyadmin:
+    container_name: phpmyadmin_container
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - PMA_HOST=mysql57_container
+      - PMA_USER=root
+      - PMA_PASSWORD=phpcurso
+    restart: always
+    ports:
+      - 8091:80
+    networks:
+      - www_phpmysql_network   
+networks:
+  www_phpmysql_network:
