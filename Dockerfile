@@ -6,6 +6,8 @@ ENV TERM=xterm
 RUN apt-get update
 RUN apt-get -y upgrade
 
+RUN apt-get install vim
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing install apache2 \
       php \
       php-cli \
@@ -45,6 +47,8 @@ RUN chgrp -R www-data /var/www
 RUN chown -R www-data:www-data /var/www
 
 WORKDIR /var/www/
+
+RUN service apache2 restart
 
 EXPOSE 80 443
 

@@ -23,7 +23,8 @@ class ImovelController extends Controller
      */
     public function create()
     {
-        //
+           
+        return view('imoveis.create');
     }
 
     /**
