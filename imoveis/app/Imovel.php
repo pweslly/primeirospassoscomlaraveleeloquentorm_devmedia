@@ -8,7 +8,7 @@ class Imovel extends Model
 {
     //
     protected $fillable = [
-        "descricao", "logradouroEndereco", "bairroEndereco", "numeroEndereco", "cepEndereco", "cidadeEndereco"
+        "descricao", "logradouroEndereco", "bairroEndereco", "numeroEndereco", "cepEndereco", "cidadeEndereco","preco","qtdQuartos","tipo","finalidade"
     ];
 
     protected $table = "imoveis";

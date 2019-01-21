@@ -3,9 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Imovel;
+use validator;
 
 class ImovelController extends Controller
 {
+    
+    protected function validarImovel($request){
+        $validator = validator::make($request->all(),[
+            "descricao" => "required",
+            "logradouroEndereco" => "required",
+            "bairroEndereco" => "required",
+            "numeroEndereco" => "required | numeric",
+            "cepEndereco" => "required",
+            "preco" => "required | numeric",
+            "qtdQuartos" => "required | numeric",
+            "tipos" => "required",
+            "finalidade" => "required"
+        ]);
+    }
+    
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +54,15 @@ class ImovelController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = $this->validarImovel($request);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator->errors());   
+        }
+        
         //
+        $dados = $request->all();
+        Imovel::create($dados);
+        return redirect()->route('imoveis.index');
     }
 
     /**
