@@ -3,7 +3,9 @@
     <div class="panel panel-default">
         <div class="panel-heading"><h3>Edite o Imóvel</h3></div>
         <div class="panel-body">
-            <form method="post" action="">
+            <form method="post" action="{{route ('imoveis.update', $imovel->id)}}">
+            <input type="hidden" name="_method" value="PUT">
+            {{csrf_field()}}
                 <h4>Dados do imóvel</h4>
                 <hr>
                     <div class="form-group">
