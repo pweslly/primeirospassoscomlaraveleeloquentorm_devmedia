@@ -1,5 +1,12 @@
 @extends('shared.base')
 @section('content')
+@if($errors->any())
+    <div class="alert alert-danger" role="alert">
+        @foreach ($errors->all() as $error)
+        {{$error}}<br>
+        @endforeach
+    </div>
+@endif
     <div class="panel panel-default">
         <div class="panel-heading"><h3>Edite o Imóvel</h3></div>
         <div class="panel-body">
