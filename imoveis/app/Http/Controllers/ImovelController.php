@@ -23,9 +23,7 @@ class ImovelController extends Controller
         ]);
         return $validator;
     }
-    
-    
-    
+        
     /**
      * Display a listing of the resource.
      *
@@ -34,6 +32,8 @@ class ImovelController extends Controller
     public function index()
     {
         //
+        $imoveis = Imovel::all();
+        return view('imoveis.index', compact('imoveis'));
     }
 
     /**
@@ -74,6 +74,9 @@ class ImovelController extends Controller
     public function show($id)
     {
         //
+        $imovel = Imovel::find($id);
+        
+        return view('imoveis.show', compact('imovel'));
     }
 
     /**
@@ -85,6 +88,9 @@ class ImovelController extends Controller
     public function edit($id)
     {
         //
+        $imovel = Imovel::find($id);
+
+        return view('imoveis.edit', compact('imovel'));
     }
 
     /**
