@@ -1,31 +1,31 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
-
+ 
 use Illuminate\Http\Request;
 use App\Imovel;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
-
 class ImovelController extends Controller
 {
-    
+ 
     protected function validarImovel($request){
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             "descricao" => "required",
-            "logradouroEndereco" => "required",
+            "logradouroEndereco"=> "required",
             "bairroEndereco" => "required",
             "numeroEndereco" => "required | numeric",
             "cepEndereco" => "required",
+            "cidadeEndereco" => "required",
             "preco" => "required | numeric",
-            "qtdQuartos" => "required | numeric",
+            "qtdQuartos" => "required | numeric ",
             "tipo" => "required",
             "finalidade" => "required"
         ]);
         return $validator;
     }
-        
+ 
     /**
      * Display a listing of the resource.
      *
@@ -33,19 +33,29 @@ class ImovelController extends Controller
      */
     public function index(Request $request)
     {
-        $qtd = $request['qtd'] ? : 2;
-        $page = $request['page'] ? : 1;
-
-        Paginator::currentPageResolver( function () use ($page){
+        $qtd = $request['qtd'] ?: 2;
+        $page = $request['page'] ?: 1;
+        $buscar = $request['buscar'];
+        $tipo = $request['tipo'];
+ 
+        Paginator::currentPageResolver(function () use ($page){
             return $page;
         });
-
-        $imoveis  = DB::table('imoveis')->paginate($qtd);
-        $imoveis  = $imoveis->appends(Request::capture()->except('page'));
-
+ 
+        if($buscar){
+            $imoveis = DB::table('imoveis')->where('cidadeEndereco', '=', $buscar)->paginate($qtd);
+        }else{  
+            if($tipo){
+                $imoveis = DB::table('imoveis')->where('tipo', '=', $tipo)->paginate($qtd);
+            }else{
+                $imoveis = DB::table('imoveis')->paginate($qtd);
+            }
+        }
+        $imoveis = $imoveis->appends(Request::capture()->except('page'));
+ 
         return view('imoveis.index', compact('imoveis'));
     }
-
+ 
     /**
      * Show the form for creating a new resource.
      *
@@ -53,10 +63,9 @@ class ImovelController extends Controller
      */
     public function create()
     {
-           
         return view('imoveis.create');
     }
-
+ 
     /**
      * Store a newly created resource in storage.
      *
@@ -74,7 +83,7 @@ class ImovelController extends Controller
  
         return redirect()->route('imoveis.index');
     }
-
+ 
     /**
      * Display the specified resource.
      *
@@ -83,12 +92,11 @@ class ImovelController extends Controller
      */
     public function show($id)
     {
-        //
         $imovel = Imovel::find($id);
-        
+ 
         return view('imoveis.show', compact('imovel'));
     }
-
+ 
     /**
      * Show the form for editing the specified resource.
      *
@@ -97,12 +105,11 @@ class ImovelController extends Controller
      */
     public function edit($id)
     {
-        //
         $imovel = Imovel::find($id);
-
+ 
         return view('imoveis.edit', compact('imovel'));
     }
-
+ 
     /**
      * Update the specified resource in storage.
      *
@@ -112,22 +119,19 @@ class ImovelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $validator = $this->validarImovel($request);
-
+         
         if($validator->fails()){
             return redirect()->back()->withErrors($validator->errors());
         }
-
+ 
         $imovel = Imovel::find($id);
         $dados = $request->all();
-
         $imovel->update($dados);
-
+         
         return redirect()->route('imoveis.index');
-
     }
-
+ 
     /**
      * Remove the specified resource from storage.
      *
@@ -136,20 +140,14 @@ class ImovelController extends Controller
      */
     public function destroy($id)
     {
-        //
-<<<<<<< HEAD
         Imovel::find($id)->delete();
         return redirect()->route('imoveis.index');
-=======
->>>>>>> 99ee62b7674909348f4d981b1ad8c152b4db30cb
-        
     }
-
-    public function remover($id){
-
+ 
+    public function remover($id)
+    {
         $imovel = Imovel::find($id);
-                
+ 
         return view('imoveis.remove', compact('imovel'));
-
     }
 }
