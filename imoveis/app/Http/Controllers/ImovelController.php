@@ -42,19 +42,15 @@ class ImovelController extends Controller
             return $page;
         });
  
-        if($buscar){
-            $imoveis = DB::table('imoveis')->where('cidadeEndereco', '=', $buscar)->paginate($qtd);
-        }else{  
-            if($tipo){
-                $imoveis = DB::table('imoveis')->where('tipo', '=', $tipo)->paginate($qtd);
-            }else{
-                $imoveis = DB::table('imoveis')->paginate($qtd);
-            }
+       if($buscar){
+           $imoveis = DB::table('imoveis')->where('cidadeEndereco', '=', $buscar)->paginate($qtd);
+        }else{
+            $imoveis = DB::table('imoveis')->paginate($qtd);
         }
         $imoveis = $imoveis->appends(Request::capture()->except('page'));
- 
+        
         return view('imoveis.index', compact('imoveis'));
-    }
+}
  
     /**
      * Show the form for creating a new resource.
